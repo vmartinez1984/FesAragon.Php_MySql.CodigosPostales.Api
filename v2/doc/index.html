@@ -24,7 +24,7 @@
 
             <p class="uk-text-lead">La información fue obtenida de Correos de México</p>
 
-            <hr/>
+            <hr />
             <ul uk-accordion="multiple: true">
                 <li class="uk-open">
                     <a class="uk-accordion-title" href="#">Obtener Código Postal aleatorio</a>
@@ -32,7 +32,7 @@
 
                         <div class="uk-card uk-card-default">
                             <div class="uk-card-body">
-                                <h3 class="uk-card-title uk-text-break">index.php/CodigosPostales/aleatorio</h3>
+                                <h3 class="uk-card-title uk-text-break"><span id="spanUrlBase"></span>aleatorio</h3>
                                 <form>
                                     <div class="uk-margin">
                                         <button class="uk-button uk-button-primary"
@@ -57,7 +57,7 @@
 
                         <div class="uk-card uk-card-default">
                             <div class="uk-card-body">
-                                <h3 class="uk-card-title uk-text-break">index.php/CodigosPostales/<span
+                                <h3 class="uk-card-title uk-text-break">index.php/api/CodigosPostales/<span
                                         id="spanObtenerCodigoPostal"></span></h3>
                                 <div class="uk-margin">
                                     <div uk-grid>
@@ -103,13 +103,14 @@
                     </div>
                 </li>
 
-                <li class="uk-open">
+                <!-- <li class="uk-open">
                     <a class="uk-accordion-title" href="#">Alcaldias</a>
                     <div class="uk-accordion-content">
 
                         <div class="uk-card uk-card-default">
                             <div class="uk-card-body">
-                                <h3 class="uk-card-title uk-text-break">index.php/CodigosPostales/Estados/<span id="spanEstado">9</span></h3>
+                                <h3 class="uk-card-title uk-text-break">index.php/CodigosPostales/Estados/<span
+                                        id="spanEstado">9</span></h3>
                                 <form>
                                     <div class="uk-margin">
                                         <div>
@@ -127,31 +128,37 @@
                             </div>
                         </div>
                     </div>
-                </li>
+                </li> -->
             </ul>
 
 
         </article>
 
     </div>
- 
+
     <div class="uk-background-muted">
         <div class="uk-card uk-card-default uk-card-body uk-text-center uk-position-z-index"
             uk-sticky="position: bottom">Api códigos postales por Víctor Martínez</div>
     </div>
     <script>
-        const urlBase = 'https://codigospostalex.000webhostapp.com/api/v2/index.php'
+        var urlBase = window.location.href;
+        console.log(urlBase)
+        urlBase = urlBase.replace('#', '')
+        urlBase += "index.php/api/"
+        console.log(urlBase)
+        document.getElementById("spanUrlBase").innerText = urlBase
+        //alert (urlBase) 
+        //http://localhost/CodigosPostales/V2/
+        //const urlBase = 'https://codigospostalex.000webhostapp.com/api/v2/index.php'
         function obtenerCodigoPostalAleatorio() {
             button = document.getElementById('buttonObtenerCodigoPostalAleatorio')
 
             button.disabled = true
-            var requestOptions = {
-                method: 'GET',
-                redirect: 'follow'
-            };
-            fetch("https://codigospostalex.000webhostapp.com/api/v2/index.php/CodigosPostales/Aleatorio", requestOptions)
+            console.log(urlBase + "codigospostales/aleatorio")
+            fetch(urlBase + "codigospostales/aleatorio")
                 .then(response => response.text())
                 .then(result => {
+                    //console.log(result)
                     var obj = JSON.parse(result);
                     var pretty = JSON.stringify(obj, undefined, 4);
                     document.getElementById("textAreaCodigoPostalAleatorio").innerHTML = pretty
@@ -166,15 +173,16 @@
 
         function obtenerCodigoPostal() {
             var codigoPostal
-            var button            
+            var button
 
             codigoPostal = document.getElementById('textObtenerCodigoPostal').value
             document.getElementById('spanObtenerCodigoPostal').innerText = codigoPostal
             button = document.getElementById('buttonObtenerCodigoPostal')
             button.disabled = true
-            fetch(urlBase +"/CodigosPostales/" + codigoPostal)
+            console.log(urlBase + "codigospostales/" + codigoPostal)
+            fetch(urlBase + "codigospostales/" + codigoPostal)
                 .then(response => response.text())
-                .then(result => {
+                .then(result => {                    
                     var obj = JSON.parse(result);
                     var pretty = JSON.stringify(obj, undefined, 4);
                     document.getElementById("textAreaCodigoPostal").innerHTML = pretty
@@ -188,7 +196,8 @@
             button = document.getElementById('buttonObtenerEstados')
 
             button.disabled = true
-            fetch("https://codigospostalex.000webhostapp.com/api/v2/index.php/Estados")
+            console.log(urlBase + "estados")
+            fetch(urlBase + "estados")
                 .then(response => response.text())
                 .then(result => {
                     var obj = JSON.parse(result);
@@ -198,12 +207,12 @@
                 })
                 .catch(error => console.log('error', error));
         }
-    
-        function limpiarTextArea(id){
+
+        function limpiarTextArea(id) {
             document.getElementById(id).innerText = ''
         }
 
-        function obtenerAlcaldias(){
+        function obtenerAlcaldias() {
             var button
             var estado
 
@@ -211,13 +220,13 @@
             button.disabled = true
             estado = document.getElementById('textEstado').value
             document.getElementById('spanEstado').innerText = estado
-            fetch(urlBase +"/Estados/" + estado + "/Alcaldias")
+            fetch(urlBase + "/Estados/" + estado + "/Alcaldias")
                 .then(response => response.text())
                 .then(result => {
                     var obj = JSON.parse(result);
                     var pretty = JSON.stringify(obj, undefined, 4);
                     document.getElementById("textAreaAlcaldias").innerHTML = pretty
-                    button.disabled = false                    
+                    button.disabled = false
                 })
                 .catch(error => console.log('error', error));
         }

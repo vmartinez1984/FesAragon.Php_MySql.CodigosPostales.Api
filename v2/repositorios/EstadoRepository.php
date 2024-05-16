@@ -5,14 +5,12 @@ class EstadoRepository extends Conexion
 {
     public function __construct() { parent::__construct(); }
 
-    public function obtener_todos(){
-        $query;
-        $resultado;
-        $datos;
-
+    public function obtener_todos(){ 
         $query = "SELECT DISTINCT(Estado), EstadoId FROM CodigoPostal";
-        $resultado = $this->mysqli->query($query);
-        $datos = $resultado->fetch_all(MYSQLI_ASSOC);
+        $sentencia = $this->mysqli->prepare($query);
+        $sentencia->execute();
+        $resultado = $sentencia->get_result();
+        $datos = $resultado->fetch_all(MYSQLI_ASSOC);       
 
         return $datos;
     }
