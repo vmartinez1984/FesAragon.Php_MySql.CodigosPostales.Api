@@ -3,13 +3,12 @@ services:
   php:
     build:
       context: .
-      dockerfile: Dockerfile
-    volumes:
-      - ./src:/var/www/html
+      dockerfile: Dockerfile   
     ports:
-      - 8080:80
+      - 8081:80
     depends_on:
       - mysql
+    container_name: codigos-postales-php
   mysql:
     image: mysql:latest
     restart: always
